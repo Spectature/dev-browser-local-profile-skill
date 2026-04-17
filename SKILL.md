@@ -7,7 +7,7 @@ description: Standalone browser automation for a persistent local Chrome or Chro
 
 Use this skill when browser automation should connect to a long-lived local browser profile instead of launching a fresh browser state.
 
-This skill is standalone. It does not require `dev-browser`.
+This project was adapted from [dev-browser](https://github.com/SawyerHood/dev-browser), but the current skill runs standalone and does not require `dev-browser`.
 
 ## Core Rules
 
