@@ -1,4 +1,4 @@
-﻿# Dev Browser Local Profile
+# Dev Browser Local Profile
 
 英文原版: [SKILL.md](SKILL.md)
 
