@@ -1,7 +1,7 @@
 {
   "name": "dev-browser-local-profile-skill",
   "version": "0.2.0",
-  "description": "Standalone browser automation scripts for persistent local Chrome profiles using Playwright over CDP.",
+  "description": "Standalone browser automation scripts adapted from dev-browser for persistent local Chrome profiles using Playwright over CDP.",
   "type": "module",
   "private": false,
   "license": "MIT",
