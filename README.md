@@ -1,4 +1,6 @@
-# dev-browser-local-profile-skill
+﻿# dev-browser-local-profile-skill
+
+Chinese docs: [README.zh-CN.md](README.zh-CN.md) and [SKILL.zh-CN.md](SKILL.zh-CN.md)
 
 A Codex skill for using `dev-browser` with a persistent local Chrome or Chromium profile instead of a fresh managed browser.
 
@@ -53,4 +55,3 @@ URLs like `http://localhost:9527/#/path?...` may be truncated when opened throug
 ## License
 
 MIT
-
