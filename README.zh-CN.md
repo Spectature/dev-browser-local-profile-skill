@@ -1,4 +1,4 @@
-﻿# dev-browser-local-profile-skill
+# dev-browser-local-profile-skill
 
 英文原版: [README.md](README.md)
 

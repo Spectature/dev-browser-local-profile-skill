@@ -1,4 +1,4 @@
-﻿# dev-browser-local-profile-skill
+# dev-browser-local-profile-skill
 
 Chinese docs: [README.zh-CN.md](README.zh-CN.md) and [SKILL.zh-CN.md](SKILL.zh-CN.md)
 
