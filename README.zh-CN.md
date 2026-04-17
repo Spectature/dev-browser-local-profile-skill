@@ -6,6 +6,12 @@
 
 它不依赖 `dev-browser`。
 
+## 致谢与来源
+
+本项目由 [dev-browser](https://github.com/SawyerHood/dev-browser) 改造而来，原项目作者为 Sawyer Hood。
+
+当前仓库保留了“连接本地长期使用的浏览器 profile”这一工作流方向，但已经重构为一个独立的、基于 Playwright over CDP 的 skill，不再依赖原始 `dev-browser` CLI。
+
 ## 这个 skill 解决什么问题
 
 当浏览器自动化使用全新的托管浏览器时，它不会复用你平时真实在用的浏览器会话。
