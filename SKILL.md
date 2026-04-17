@@ -1,23 +1,35 @@
 ---
 name: dev-browser-local-profile
-description: Reuse a persistent local Chrome or Chromium profile with dev-browser so browser automation opens pages in an already logged-in session instead of a fresh managed browser. Use when opening local sites, internal tools, or authenticated web apps where preserving cookies, saved passwords, and existing tabs matters, especially on Windows, macOS, or Linux machines with a fixed remote-debugging port.
+description: Standalone browser automation for a persistent local Chrome or Chromium profile using Playwright over CDP. Use when you need to open local sites, internal tools, or authenticated web apps in an already logged-in browser session without relying on dev-browser.
 ---
 
 # Dev Browser Local Profile
 
 Use this skill when browser automation should connect to a long-lived local browser profile instead of launching a fresh browser state.
 
+This skill is standalone. It does not require `dev-browser`.
+
 ## Core Rules
 
-- Prefer `dev-browser --connect` over the default managed browser.
+- Use the bundled Playwright-over-CDP scripts instead of `dev-browser`.
 - Assume a persistent browser profile is the source of truth for login state.
 - Prefer a fixed remote-debugging port. Default to `9222` unless the user says otherwise.
 - Keep profile paths user-relative. Never hard-code machine-specific usernames.
-- Open a new tab in the connected browser instead of replacing the user's current tab unless asked.
+- Open a new tab by default instead of replacing the user's current tab unless asked.
 
 ## Setup Workflow
 
-### 1. Start Chrome or Chromium with a persistent profile
+### 1. Install dependencies
+
+Run this once inside the skill directory:
+
+```bash
+npm install
+```
+
+This installs `playwright-core` only. It does not download a separate managed browser.
+
+### 2. Start Chrome or Chromium with a persistent profile
 
 Use a fixed user data directory under the current user's home directory:
 
@@ -38,92 +50,102 @@ python scripts/start_chrome_debug.py --profile-dir "C:\Users\name\chrome-dev-bro
 python scripts/start_chrome_debug.py --chrome-path "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 ```
 
-### 2. Connect dev-browser to the existing browser
+### 3. Use the standalone browser tools
 
-Prefer auto-discovery first:
-
-```bash
-dev-browser --connect
-```
-
-If auto-discovery fails and the debugging endpoint is known, connect explicitly:
+Open a URL in a new tab:
 
 ```bash
-dev-browser --connect http://127.0.0.1:9222
+node scripts/browser_tools.mjs open --url "http://localhost:9800/h5-bzzx/"
 ```
 
-### 3. Open pages in a new tab
+List current tabs:
 
-Use `browser.newPage()` for a fresh tab and `page.goto()` for normal URLs.
+```bash
+node scripts/browser_tools.mjs list
+```
+
+Take a screenshot:
+
+```bash
+node scripts/browser_tools.mjs screenshot --url "http://localhost:9800/h5-bzzx/" --output "./page.png"
+```
+
+### 4. Run custom automation tasks
+
+Use the generic task runner for more than simple open/list/screenshot flows:
+
+```bash
+node scripts/run_task.mjs --task ./my-task.mjs --url "http://localhost:9800/h5-bzzx/" --task-arg mode=debug
+```
+
+Task modules should export a default async function or named `run` function.
 
 Example:
 
 ```javascript
-const page = await browser.newPage();
-await page.goto("http://localhost:9800/h5-bzzx/", { waitUntil: "domcontentloaded", timeout: 15000 });
-await page.bringToFront();
-console.log(JSON.stringify({ url: page.url(), title: await page.title() }, null, 2));
+export default async function ({ page, helpers, taskArgs }) {
+  await page.waitForLoadState("domcontentloaded");
+  return {
+    title: await page.title(),
+    url: page.url(),
+    taskArgs
+  };
+}
 ```
 
 ## Hash Route Handling
 
-Do not rely on DevTools `json/new?...` or similar direct open flows for hash-routed URLs. The `#...` portion may be dropped.
+Do not rely on `json/new?...` or similar direct DevTools open flows for hash-routed URLs. The `#...` portion may be dropped.
 
-For hash routes:
+For hash routes, the bundled scripts already use a two-step navigation strategy:
 
-1. Open the origin or base route first.
-2. Then set `window.location.href` or `window.location.hash` inside the page.
+1. Open the base URL first.
+2. Then set `window.location.href` inside the page.
 
 Example:
 
-```javascript
-const page = await browser.newPage();
-await page.goto("http://localhost:9527/", { waitUntil: "domcontentloaded", timeout: 15000 });
-await page.evaluate(() => {
-  window.location.href = "http://localhost:9527/#/inspection/log/list?book_id=352";
-});
-await page.bringToFront();
+```bash
+node scripts/browser_tools.mjs open --url "http://localhost:9527/#/inspection/log/list?book_id=352"
 ```
 
 ## Verification Checklist
 
 After opening a page, verify success explicitly:
 
-- Check `page.url()` matches the expected route.
-- Check `await page.title()` or a known selector if the page has dynamic titles.
-- If the action appears silent, list pages or inspect the connected browser tabs before retrying.
-- If login is missing, confirm the browser was started with the persistent profile and not a temporary profile.
+- Check the JSON output `url` matches the expected route.
+- Check `title` or a known selector if the page has dynamic titles.
+- If the action appears silent, run `node scripts/browser_tools.mjs list` before retrying.
+- If login is missing, confirm Chrome was started with the persistent profile and not a temporary profile.
 
 ## Failure Modes
 
-### New browser opened without login state
+### Browser tools could not connect
 
-Likely cause: dev-browser used its own managed browser or Chrome started with a temporary profile.
+Likely cause: Chrome is not running with `--remote-debugging-port=<port>`.
+
+Fix:
+
+- Restart Chrome with `python scripts/start_chrome_debug.py`.
+- Confirm the port matches the one passed to the scripts.
+
+### New tab opened but route was wrong
+
+Likely cause: hash route truncation in an external tool or a manually shortened URL.
+
+Fix:
+
+- Use the bundled open command.
+- Pass the full hash-route URL.
+
+### Login state is missing
+
+Likely cause: Chrome started with a different profile directory.
 
 Fix:
 
 - Restart Chrome with the persistent `--user-data-dir`.
-- Reconnect with `dev-browser --connect`.
-
-### New tab opened but route was wrong
-
-Likely cause: hash route truncation.
-
-Fix:
-
-- Open the root URL first.
-- Then set `window.location.href` or `window.location.hash`.
-
-### Connect by URL failed
-
-Likely cause: `http://127.0.0.1:9222` did not expose the expected endpoint directly.
-
-Fix:
-
-- Try `dev-browser --connect` without a URL first.
-- Confirm Chrome is running with `--remote-debugging-port=<port>`.
+- Reuse that same profile directory consistently.
 
 ## Scope
 
-This skill is intentionally workflow-focused. It does not replace `dev-browser`; it standardizes how to use `dev-browser` when preserving local login state is more important than running against a fresh isolated browser.
-
+This skill is intentionally workflow-focused. It standardizes a standalone browser automation setup for persistent local login state using Playwright over CDP.

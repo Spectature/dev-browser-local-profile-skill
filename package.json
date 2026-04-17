@@ -1,0 +1,17 @@
+{
+  "name": "dev-browser-local-profile-skill",
+  "version": "0.2.0",
+  "description": "Standalone browser automation scripts for persistent local Chrome profiles using Playwright over CDP.",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "scripts": {
+    "browser:open": "node scripts/browser_tools.mjs open",
+    "browser:list": "node scripts/browser_tools.mjs list",
+    "browser:screenshot": "node scripts/browser_tools.mjs screenshot",
+    "browser:run": "node scripts/run_task.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "1.58.2"
+  }
+}

@@ -1,5 +1,4 @@
 interface:
-  display_name: "Dev Browser Local Profile"
-  short_description: "Connect dev-browser to a persistent local Chrome profile."
-  default_prompt: "Use $dev-browser-local-profile to open a local site in an existing logged-in browser profile."
-
+  display_name: "Local Browser Profile Automation"
+  short_description: "Standalone Playwright-over-CDP automation for a persistent local Chrome profile."
+  default_prompt: "Use $dev-browser-local-profile to open or automate a local site in an existing logged-in browser profile without relying on dev-browser."
