@@ -58,7 +58,7 @@ def build_command(browser_path: Path, port: int, profile_dir: Path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Launch Chrome/Chromium with a persistent dev-browser profile.")
+    parser = argparse.ArgumentParser(description="Launch Chrome/Chromium with a persistent local automation profile.")
     parser.add_argument("--port", type=int, default=9222)
     parser.add_argument("--profile-dir", default=str(default_profile_dir()))
     parser.add_argument("--chrome-path")
