@@ -6,7 +6,7 @@
 
 实际会被 Codex 当作 skill 入口读取的仍然是英文版 `SKILL.md`。保留英文入口是为了兼容当前 skill 发现和触发流程。
 
-这个 skill 现在是独立版，不依赖 `dev-browser`。
+这个 skill 由 [dev-browser](https://github.com/SawyerHood/dev-browser) 改造而来，但当前版本已经可以独立运行，不依赖 `dev-browser`。
 
 ## 使用场景
 

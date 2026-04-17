@@ -6,6 +6,12 @@ A standalone Codex skill for browser automation against a persistent local Chrom
 
 It does not require `dev-browser`.
 
+## Attribution
+
+This project was adapted from [dev-browser](https://github.com/SawyerHood/dev-browser), originally created by Sawyer Hood.
+
+The current repository keeps the persistent-profile browser workflow as its starting point, but restructures it into a standalone Playwright-over-CDP skill that does not require the original `dev-browser` CLI.
+
 ## What it solves
 
 When browser automation launches a fresh managed browser, it does not reuse the browser session you already use day to day. That means local cookies, saved passwords, authenticated tabs, and internal tool login state are often missing.
