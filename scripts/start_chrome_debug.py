@@ -3,6 +3,7 @@ import argparse
 import os
 import platform
 import shutil
+import socket
 import subprocess
 import sys
 from pathlib import Path
@@ -57,6 +58,14 @@ def build_command(browser_path: Path, port: int, profile_dir: Path):
     return command
 
 
+def can_connect_cdp(port: int, host: str = "127.0.0.1", timeout: float = 0.5) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
 def main():
     parser = argparse.ArgumentParser(description="Launch Chrome/Chromium with a persistent local automation profile.")
     parser.add_argument("--port", type=int, default=9222)
@@ -72,6 +81,12 @@ def main():
 
     if args.print_command:
         print(" ".join(command))
+        return
+
+    if can_connect_cdp(args.port):
+        print(f"CDP endpoint already available at http://127.0.0.1:{args.port}. Reusing existing browser.")
+        print(f"Profile: {profile_dir}")
+        print(f"Port: {args.port}")
         return
 
     kwargs = {}

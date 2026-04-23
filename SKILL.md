@@ -15,7 +15,7 @@ This project was adapted from [dev-browser](https://github.com/SawyerHood/dev-br
 - Assume a persistent browser profile is the source of truth for login state.
 - Prefer a fixed remote-debugging port. Default to `9222` unless the user says otherwise.
 - Keep profile paths user-relative. Never hard-code machine-specific usernames.
-- Open a new tab by default instead of replacing the user's current tab unless asked.
+- Reuse an existing connected browser/page by default. Open a new tab only when explicitly requested.
 
 ## Setup Workflow
 
@@ -52,7 +52,7 @@ python scripts/start_chrome_debug.py --chrome-path "/Applications/Google Chrome.
 
 ### 3. Use the standalone browser tools
 
-Open a URL in a new tab:
+Open a URL (reuses current page by default):
 
 ```bash
 node scripts/browser_tools.mjs open --url "http://localhost:9800/h5-bzzx/"
@@ -127,6 +127,7 @@ Fix:
 
 - Restart Chrome with `python scripts/start_chrome_debug.py`.
 - Confirm the port matches the one passed to the scripts.
+- If the port is already active, the launcher now reuses the existing browser instead of opening a new one.
 
 ### New tab opened but route was wrong
 

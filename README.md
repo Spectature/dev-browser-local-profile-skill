@@ -21,7 +21,7 @@ This skill standardizes a different workflow:
 - start Chrome or Chromium with a fixed remote-debugging port
 - keep a persistent browser profile under the current user's home directory
 - connect with Playwright over CDP
-- open new tabs in the connected logged-in browser
+- reuse the connected browser/page by default (new tab only when requested)
 - run standalone automation tasks without `dev-browser`
 - handle hash routes safely by navigating in two steps
 
@@ -49,7 +49,7 @@ Start a persistent browser profile:
 python scripts/start_chrome_debug.py
 ```
 
-Open a page in a new tab:
+Open a page (reuses current page by default):
 
 ```bash
 node scripts/browser_tools.mjs open --url "http://localhost:9800/h5-bzzx/"
