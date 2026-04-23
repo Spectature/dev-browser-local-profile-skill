@@ -56,6 +56,12 @@ Open a URL (reuses current page by default):
 
 ```bash
 node scripts/browser_tools.mjs open --url "http://localhost:9800/h5-bzzx/"
+
+# Explicit controls:
+# force reuse current page
+node scripts/browser_tools.mjs open --url "http://localhost:9800/h5-bzzx/" --reuse-current-page true
+# force open a new tab
+node scripts/browser_tools.mjs open --url "http://localhost:9800/h5-bzzx/" --new-tab true
 ```
 
 List current tabs:

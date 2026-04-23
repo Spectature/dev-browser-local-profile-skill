@@ -19,7 +19,10 @@ async function openCommand(options) {
   const timeout = getNumberOption(options, "timeout", 15000);
   const waitUntil = getStringOption(options, "wait-until", "domcontentloaded");
   const settleMs = getNumberOption(options, "settle-ms", 300);
-  const preferNewTab = getBooleanOption(options, "new-tab", false);
+  const reuseCurrentPage = getBooleanOption(options, "reuse-current-page", true);
+  const preferNewTab = options["new-tab"] === undefined
+    ? !reuseCurrentPage
+    : getBooleanOption(options, "new-tab", false);
   const { browser, endpoint } = await connectBrowser({ port });
   const target = await resolvePage(browser, { preferNewTab });
   await navigatePage(target.page, url, { timeout, waitUntil, settleMs });
@@ -55,7 +58,10 @@ async function screenshotCommand(options) {
   const waitUntil = getStringOption(options, "wait-until", "domcontentloaded");
   const settleMs = getNumberOption(options, "settle-ms", 300);
   const fullPage = getBooleanOption(options, "full-page", true);
-  const preferNewTab = getBooleanOption(options, "new-tab", false);
+  const reuseCurrentPage = getBooleanOption(options, "reuse-current-page", true);
+  const preferNewTab = options["new-tab"] === undefined
+    ? !reuseCurrentPage
+    : getBooleanOption(options, "new-tab", false);
   const { browser, endpoint } = await connectBrowser({ port });
   const target = await resolvePage(browser, {
     preferNewTab,

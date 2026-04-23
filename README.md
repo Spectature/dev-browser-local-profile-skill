@@ -25,6 +25,11 @@ This skill standardizes a different workflow:
 - run standalone automation tasks without `dev-browser`
 - handle hash routes safely by navigating in two steps
 
+Default page reuse behavior:
+
+- `--reuse-current-page` defaults to `true`
+- `--new-tab` is still supported for compatibility and takes precedence when explicitly passed
+
 ## Included files
 
 - `SKILL.md` - the skill instructions
@@ -53,6 +58,12 @@ Open a page (reuses current page by default):
 
 ```bash
 node scripts/browser_tools.mjs open --url "http://localhost:9800/h5-bzzx/"
+
+# Explicit controls:
+# force reuse current page
+node scripts/browser_tools.mjs open --url "http://localhost:9800/h5-bzzx/" --reuse-current-page true
+# force open a new tab
+node scripts/browser_tools.mjs open --url "http://localhost:9800/h5-bzzx/" --new-tab true
 ```
 
 ## Custom automation

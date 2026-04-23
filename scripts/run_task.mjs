@@ -22,7 +22,10 @@ async function main() {
   const waitUntil = getStringOption(options, "wait-until", "domcontentloaded");
   const settleMs = getNumberOption(options, "settle-ms", 300);
   const url = getStringOption(options, "url", "");
-  const preferNewTab = getBooleanOption(options, "new-tab", false);
+  const reuseCurrentPage = getBooleanOption(options, "reuse-current-page", true);
+  const preferNewTab = options["new-tab"] === undefined
+    ? !reuseCurrentPage
+    : getBooleanOption(options, "new-tab", false);
   const taskArgs = buildTaskArgs(options);
   const { browser, endpoint } = await connectBrowser({ port });
   const target = await resolvePage(browser, {
